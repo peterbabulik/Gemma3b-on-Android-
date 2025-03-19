@@ -1,4 +1,4 @@
-## from a technical challenge (part1), to a user-friendly solution ([part2](#part2)) to use of ai agents ([part3](#part3)).
+## from a technical challenge ([part1](#part1), to a user-friendly solution ([part2](#part2)) to use of ai agents ([part3](#part3)).
 
 # part1
 <h2 id="part1"></h2>
@@ -247,10 +247,10 @@ This project demonstrates how to create an agentic Dungeons & Dragons (D&D) simu
 ## Prerequisites
 
 *   You must have completed the steps in ([part1](#part1)) and ([part2](#part2))
-*   Node.js and npm must be installed within the in Termux.
+*  GIT and Node.js and npm must be installed within the in Termux.
 
     ```bash
-    apt install nodejs 
+    apt install nodejs git
     ```
 
 *   Ollama must be running with Gemma 3:1b downloaded.
@@ -280,7 +280,7 @@ This project demonstrates how to create an agentic Dungeons & Dragons (D&D) simu
     ```bash
     npm install node-fetch fs
     ```
-# if ollama is running and gemma3:1b is loaded:
+# if ollama is running and gemma3:1b is loaded (([part1](#part1)):
 
 ```bash
     node index.js
