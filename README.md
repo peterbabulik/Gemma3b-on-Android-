@@ -59,12 +59,14 @@ This guide will walk you through the steps to run the Gemma3 1b large language m
     *   **Terminal 1:** Run:
 
         ```bash
+        proot-distro login ubuntu
         ollama serve
         ```
 
     *   **Terminal 2:** Run:
 
         ```bash
+        proot-distro login ubuntu
         ollama run gemma3:1b
         ```
 
