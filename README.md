@@ -1,4 +1,4 @@
-## from a technical challenge (part1), to a user-friendly solution (part2) to use of agents (part3).
+## from a technical challenge (part1), to a user-friendly solution ([part2](#part2)) to use of agents (part3).
 
 # part1
 
@@ -111,6 +111,7 @@ This guide will walk you through the steps to run the Gemma3 1b large language m
 This guide is provided for informational purposes only. Running AI models on mobile devices can be resource-intensive and may impact battery life and performance. Use at your own risk.
 
 ## Part 2
+<h2 id="part2"></h2>
 
 # Ollama Connection App - Web Interface for Gemma3:1b on Android
 
@@ -172,7 +173,7 @@ and go to: `http://localhost:3000` if not:
     ollama run gemma3:1b
     ```
 
-3.  **Start the Application:** In a *third* Termux terminal window (within the project directory), run:
+3.  **Start the Application:** In a *third* Termux terminal window, run:
 
     ```bash
     cd Gemma3b-on-Android-
