@@ -4,7 +4,7 @@
 
 This guide will walk you through the steps to run the Gemma3 1b large language model on your Android device using Termux and Ollama. This allows you to experience the power of a capable AI model directly on your phone!
 
-**Please note:** Running Gemma 3B:1b requires a device with at least 8GB of RAM. Performance will vary depending on your device's hardware.
+**Please note:** Running Gemma 3:1b requires a device with at least 8GB of RAM. Performance will vary depending on your device's hardware.
 
 ## Prerequisites
 
