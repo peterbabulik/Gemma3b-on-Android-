@@ -1,4 +1,4 @@
-# How to Run Gemma 3B:1b on Android
+# How to Run Gemma3:1b on Android
 
 ## Introduction
 
