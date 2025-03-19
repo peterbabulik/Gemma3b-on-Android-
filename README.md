@@ -12,6 +12,8 @@ This guide will walk you through the steps to run the Gemma3 1b large language m
 *   A stable internet connection.
 *   Patience! The initial download and setup can take some time. (downloading: Termux, (update), proot-distro, Ubuntu, (update), curl, ollama, gemma3:1b (around 5-6 GB of data, don't do it on mobile data))
 
+## kill command is ctrl + c or ctrl + d , if you don't kill, processes will run in background 
+
 ## Steps
 
 1.  **Install Termux:** Download and install Termux from the Google Play Store: [https://play.google.com/store/apps/details?id=com.termux](https://play.google.com/store/apps/details?id=com.termux)
