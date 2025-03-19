@@ -105,3 +105,120 @@ This guide will walk you through the steps to run the Gemma3 1b large language m
 ## Disclaimer
 
 This guide is provided for informational purposes only. Running AI models on mobile devices can be resource-intensive and may impact battery life and performance. Use at your own risk.
+
+## Part 2
+
+# Ollama Connection App - Web Interface for Gemma3:1b on Android
+
+## Introduction
+
+This application provides a web interface for interacting with Gemma3:1b running on your Android device via Ollama. It allows you to send messages to the model and receive responses in a chat-like format. This builds upon the previous guide for running Gemma3:1b on Android using Termux and Ollama.
+
+## Prerequisites
+
+*   You must have completed the steps outlined in the [Gemma3:1b on Android - Termux & Ollama Setup] guide. This includes having Termux, proot-distro, and Ollama installed and running with Gemma3:1b downloaded.
+*   Node.js and Git must be installed in Termux.
+
+## Installation
+
+1.  **Install Node.js and Git:**  With the Termux, run:
+
+    ```bash
+    apt update && apt upgrade -y
+    apt install nodejs git
+    ```
+
+2.  **Clone the Repository:** Clone this repository using Git:
+
+    ```bash
+    git clone https://github.com/peterbabulik/Gemma3b-on-Android-.git
+    ```
+
+3.  **Navigate to the Project Directory:**
+
+    ```bash
+    cd Gemma3b-on-Android-
+    ```
+
+4.  **Install Dependencies:** Install the required Node.js packages:
+
+    ```bash
+    npm install
+    ```
+
+## Running the Application
+
+1.  **Start Ollama:** Ensure Ollama is running in a separate Termux terminal window:
+
+    ```bash
+proot-distro login ubuntu
+    ollama serve
+    ```
+
+2.  **Run Gemma 3B:1b:**  In another Termux terminal window, start Gemma 3B:1b:
+
+    ```bash
+proot-distro login ubuntu
+    ollama run gemma3:1b
+    ```
+
+3.  **Start the Application:** In a *third* Termux terminal window (within the project directory), run:
+
+    ```bash
+cd Gemma3b-on-Android-
+    npm start
+    ```
+
+    This will start the Node.js server.
+
+4.  **Access the Web Interface:** Open a web browser on your Android device (or a computer on the same network) and navigate to `http://localhost:3000`.  You should see the chat interface.
+
+## Code Explanation (server.js)
+
+The `server.js` file contains the core logic for the application. Here's a breakdown of the key components:
+
+*   **Dependencies:**
+    *   `express`: A web application framework for Node.js.
+    *   `http`:  Used to create the HTTP server.
+    *   `WebSocket`:  Used to create a WebSocket server for real-time communication.
+    *   `path`:  Used for working with file paths.
+    *   `axios`:  Used to make HTTP requests to the Ollama API.
+    *   `body-parser`:  Used to parse JSON request bodies.
+
+*   **Configuration:**
+    *   `PORT`: The port number the server will listen on (defaults to 3000).
+    *   `OLLAMA_URL`: The URL of the Ollama API (defaults to `http://localhost:11434`).
+    *   `MODEL`: The name of the Ollama model to use (defaults to `gemma3:1b`).
+
+*   **Middleware:**
+    *   `express.static`: Serves static files from the `public` directory (e.g., `index.html`, CSS, JavaScript).
+    *   `bodyParser.json`: Parses JSON request bodies.
+
+*   **Chat History:**
+    *   `chatHistory`: An array used to store the chat messages.
+
+*   **WebSocket Server:**
+    *   The `wss.on('connection')` event handler is triggered when a new client connects to the WebSocket server.
+    *   It sends the current chat history to the new client.
+    *   The `broadcast` function sends messages to all connected clients.
+
+*   **API Routes:**
+    *   `/api/chat`:  Handles incoming chat messages. It sends the message to Ollama, receives the response, and broadcasts both the user message and the assistant's response to all connected clients.
+    *   `/api/model`: Fetches model information from the Ollama API.
+    *   `/api/clear`: Clears the chat history.
+    *   `/`: Serves the `index.html` file. from ./public/ folder
+
+*   **Server Startup:**
+    *   The server listens on the specified port and logs a message to the console.
+
+## Public Directory (public/)
+
+The `public` directory contains the `index.html` file, which provides the user interface for the chat application.
+
+## Contributing
+
+Feel free to contribute to this project by submitting pull requests or opening issues on GitHub.
+
+## License
+
+[MIT License](LICENSE)
