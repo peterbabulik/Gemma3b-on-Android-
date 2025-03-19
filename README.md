@@ -145,27 +145,33 @@ This application provides a web interface for interacting with Gemma3:1b running
     ```bash
     npm install
     ```
+# if you have 'ollama run' and ' ollama serve gemma3:1b' running in 'proot-distro login ubuntu ' then:
+
+```bash
+    npm start
+```
+# and go to: `http://localhost:3000` if not:
 
 ## Running the Application
 
 1.  **Start Ollama:** Ensure Ollama is running in a separate Termux terminal window:
 
     ```bash
-proot-distro login ubuntu
+    proot-distro login ubuntu
     ollama serve
     ```
 
 2.  **Run Gemma 3B:1b:**  In another Termux terminal window, start Gemma 3B:1b:
 
     ```bash
-proot-distro login ubuntu
+    proot-distro login ubuntu
     ollama run gemma3:1b
     ```
 
 3.  **Start the Application:** In a *third* Termux terminal window (within the project directory), run:
 
     ```bash
-cd Gemma3b-on-Android-
+    cd Gemma3b-on-Android-
     npm start
     ```
 
