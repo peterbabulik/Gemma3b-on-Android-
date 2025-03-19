@@ -1,0 +1,470 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Ollama Chat - gemma3:1b</title>
+  <style>
+    :root {
+      --primary-color: #4a6fa5;
+      --secondary-color: #6c8fb7;
+      --background-color: #f5f7fa;
+      --text-color: #333;
+      --light-text: #666;
+      --border-color: #e1e4e8;
+      --message-user-bg: #e1f5fe;
+      --message-assistant-bg: #f1f1f1;
+      --message-user-border: #b3e5fc;
+      --message-assistant-border: #e0e0e0;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+      margin: 0;
+      padding: 0;
+      background-color: var(--background-color);
+      color: var(--text-color);
+      line-height: 1.6;
+    }
+
+    .container {
+      max-width: 100%;
+      margin: 0 auto;
+      display: flex;
+      flex-direction: column;
+      height: 100vh;
+    }
+
+    header {
+      background-color: var(--primary-color);
+      color: white;
+      padding: 0.5rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    h1 {
+      margin: 0;
+      font-size: 1.2rem;
+    }
+
+    .model-info {
+      font-size: 0.8rem;
+      font-weight: normal;
+    }
+
+    .status {
+      font-size: 0.8rem;
+      display: flex;
+      align-items: center;
+    }
+
+    .status-indicator {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      margin-right: 8px;
+    }
+
+    .connected {
+      background-color: #4caf50;
+    }
+
+    .disconnected {
+      background-color: #f44336;
+    }
+
+    .chat-container {
+      flex: 1;
+      overflow-y: auto;
+      padding: 1rem;
+    }
+
+    .message {
+      margin-bottom: 1rem;
+      padding: 0.8rem;
+      border-radius: 8px;
+      max-width: 85%;
+      position: relative;
+    }
+
+    .user-message {
+      background-color: var(--message-user-bg);
+      border: 1px solid var(--message-user-border);
+      align-self: flex-end;
+      margin-left: auto;
+    }
+
+    .assistant-message {
+      background-color: var(--message-assistant-bg);
+      border: 1px solid var(--message-assistant-border);
+    }
+
+    .message-content {
+      word-break: break-word;
+    }
+
+    .message-metadata {
+      font-size: 0.7rem;
+      color: var(--light-text);
+      margin-top: 0.5rem;
+      display: flex;
+      justify-content: space-between;
+    }
+
+    .input-container {
+      display: flex;
+      padding: 1rem;
+      border-top: 1px solid var(--border-color);
+      background-color: white;
+    }
+
+    .message-input {
+      flex: 1;
+      padding: 0.8rem;
+      border: 1px solid var(--border-color);
+      border-radius: 20px;
+      margin-right: 0.5rem;
+      font-size: 1rem;
+    }
+
+    .send-button {
+      background-color: var(--primary-color);
+      color: white;
+      border: none;
+      border-radius: 20px;
+      padding: 0 1rem;
+      font-size: 1rem;
+      cursor: pointer;
+    }
+
+    .clear-button {
+      background-color: transparent;
+      border: 1px solid var(--border-color);
+      color: var(--light-text);
+      padding: 0.5rem;
+      border-radius: 4px;
+      font-size: 0.8rem;
+      cursor: pointer;
+      margin-left: 0.5rem;
+    }
+
+    .loading {
+      display: flex;
+      justify-content: center;
+      margin: 1rem 0;
+    }
+
+    .dot {
+      width: 8px;
+      height: 8px;
+      background-color: var(--primary-color);
+      border-radius: 50%;
+      margin: 0 4px;
+      animation: dot-pulse 1.5s infinite ease-in-out;
+    }
+
+    .dot:nth-child(2) {
+      animation-delay: 0.2s;
+    }
+
+    .dot:nth-child(3) {
+      animation-delay: 0.4s;
+    }
+
+    @keyframes dot-pulse {
+      0%, 100% {
+        transform: scale(0.8);
+        opacity: 0.5;
+      }
+      50% {
+        transform: scale(1.2);
+        opacity: 1;
+      }
+    }
+
+    .model-details {
+      font-size: 0.8rem;
+      padding: 0.5rem;
+      border-bottom: 1px solid var(--border-color);
+      background-color: white;
+    }
+
+    .model-details p {
+      margin: 0.2rem 0;
+    }
+
+    /* Responsive adjustments */
+    @media (max-width: 768px) {
+      .message {
+        max-width: 90%;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <h1>Ollama Chat <span class="model-info">gemma3:1b</span></h1>
+      <div class="status">
+        <div class="status-indicator" id="connection-status"></div>
+        <span id="status-text">Connecting...</span>
+      </div>
+    </header>
+
+    <div class="chat-container" id="chat-container"></div>
+
+    <div class="input-container">
+      <input type="text" class="message-input" id="message-input" placeholder="Type your message here..." autocomplete="off">
+      <button class="send-button" id="send-button">Send</button>
+      <button class="clear-button" id="clear-button">Clear</button>
+    </div>
+  </div>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const messageInput = document.getElementById('message-input');
+      const sendButton = document.getElementById('send-button');
+      const clearButton = document.getElementById('clear-button');
+      const chatContainer = document.getElementById('chat-container');
+      const connectionStatus = document.getElementById('connection-status');
+      const statusText = document.getElementById('status-text');
+      const modelDetails = document.getElementById('model-details');
+
+      let isConnected = false;
+      let isLoading = false;
+      let socket;
+
+      // Initialize WebSocket connection
+      function initializeWebSocket() {
+        const protocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
+        const wsUrl = `${protocol}//${window.location.host}`;
+        
+        socket = new WebSocket(wsUrl);
+
+        socket.onopen = () => {
+          isConnected = true;
+          updateConnectionStatus();
+        };
+
+        socket.onclose = () => {
+          isConnected = false;
+          updateConnectionStatus();
+          
+          // Try to reconnect after 5 seconds
+          setTimeout(initializeWebSocket, 5000);
+        };
+
+        socket.onmessage = (event) => {
+          const data = JSON.parse(event.data);
+          
+          if (data.type === 'message') {
+            addMessage(data.data);
+          } else if (data.type === 'history') {
+            renderChatHistory(data.data);
+          }
+        };
+      }
+
+      // Update connection status indicator
+      function updateConnectionStatus() {
+        connectionStatus.classList.toggle('connected', isConnected);
+        connectionStatus.classList.toggle('disconnected', !isConnected);
+        statusText.textContent = isConnected ? 'Connected' : 'Disconnected';
+      }
+
+      // Render chat history
+      function renderChatHistory(history) {
+        chatContainer.innerHTML = '';
+        history.forEach(message => {
+          addMessage(message, false);
+        });
+        scrollToBottom();
+      }
+
+      // Add a new message to the chat
+      function addMessage(message, shouldScroll = true) {
+        const messageElement = document.createElement('div');
+        messageElement.classList.add('message');
+        
+        if (message.role === 'user') {
+          messageElement.classList.add('user-message');
+        } else {
+          messageElement.classList.add('assistant-message');
+        }
+
+        // Format the message content
+        const contentElement = document.createElement('div');
+        contentElement.classList.add('message-content');
+        contentElement.textContent = message.content;
+        messageElement.appendChild(contentElement);
+
+        // Add metadata
+        const metadataElement = document.createElement('div');
+        metadataElement.classList.add('message-metadata');
+
+        // Format timestamp
+        const timestamp = new Date(message.timestamp);
+        const timeString = timestamp.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+        
+        metadataElement.innerHTML = `<span>${timeString}</span>`;
+        
+        // Add assistant-specific metadata
+        if (message.role === 'assistant' && message.metadata) {
+          const responseTime = message.metadata.responseTime / 1000; // Convert to seconds
+          metadataElement.innerHTML += `
+            <span>
+              Response time: ${responseTime.toFixed(2)}s | 
+              Tokens: ${message.metadata.tokenCount}
+            </span>
+          `;
+        }
+        
+        messageElement.appendChild(metadataElement);
+        chatContainer.appendChild(messageElement);
+        
+        if (shouldScroll) {
+          scrollToBottom();
+        }
+
+        // Remove loading indicator if present
+        const loadingElement = document.querySelector('.loading');
+        if (loadingElement) {
+          loadingElement.remove();
+        }
+      }
+
+      // Add loading indicator
+      function addLoadingIndicator() {
+        const loadingElement = document.createElement('div');
+        loadingElement.classList.add('loading');
+        loadingElement.innerHTML = `
+          <div class="dot"></div>
+          <div class="dot"></div>
+          <div class="dot"></div>
+        `;
+        chatContainer.appendChild(loadingElement);
+        scrollToBottom();
+      }
+
+      // Scroll to the bottom of the chat
+      function scrollToBottom() {
+        chatContainer.scrollTop = chatContainer.scrollHeight;
+      }
+
+      // Send a message
+      async function sendMessage() {
+        const message = messageInput.value.trim();
+        if (!message || isLoading) return;
+
+        messageInput.value = '';
+        isLoading = true;
+        
+        // Add loading indicator
+        addLoadingIndicator();
+
+        try {
+          const response = await fetch('/api/chat', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ message }),
+          });
+
+          if (!response.ok) {
+            throw new Error('Failed to send message');
+          }
+
+          isLoading = false;
+        } catch (error) {
+          console.error('Error sending message:', error);
+          isLoading = false;
+          
+          // Remove loading indicator
+          const loadingElement = document.querySelector('.loading');
+          if (loadingElement) {
+            loadingElement.remove();
+          }
+          
+          // Add error message
+          const errorElement = document.createElement('div');
+          errorElement.classList.add('message', 'assistant-message');
+          errorElement.textContent = 'Error: Failed to communicate with Ollama server. Please try again.';
+          chatContainer.appendChild(errorElement);
+          scrollToBottom();
+        }
+      }
+
+      // Clear chat history
+      async function clearChat() {
+        try {
+          const response = await fetch('/api/clear', {
+            method: 'POST',
+          });
+
+          if (!response.ok) {
+            throw new Error('Failed to clear chat');
+          }
+        } catch (error) {
+          console.error('Error clearing chat:', error);
+        }
+      }
+
+      // Fetch model information
+      async function fetchModelInfo() {
+        try {
+          const response = await fetch('/api/model');
+          if (!response.ok) {
+            throw new Error('Failed to fetch model info');
+          }
+          
+          const data = await response.json();
+          
+          modelDetails.innerHTML = `
+            <p><strong>Model:</strong> ${data.model}</p>
+            <p><strong>Parameters:</strong> ${formatParameters(data.parameters)}</p>
+            <p><strong>Family:</strong> ${data.family || 'N/A'}</p>
+            <p><strong>Template:</strong> ${data.template || 'Default'}</p>
+          `;
+        } catch (error) {
+          console.error('Error fetching model info:', error);
+          modelDetails.innerHTML = `<p>Error loading model information. Please ensure Ollama is running.</p>`;
+        }
+      }
+
+      // Format parameter count
+      function formatParameters(params) {
+        if (!params) return 'N/A';
+        
+        const billion = 1000000000;
+        const million = 1000000;
+        
+        if (params >= billion) {
+          return `${(params / billion).toFixed(1)}B`;
+        } else if (params >= million) {
+          return `${(params / million).toFixed(1)}M`;
+        } else {
+          return params.toLocaleString();
+        }
+      }
+
+      // Event listeners
+      sendButton.addEventListener('click', sendMessage);
+      
+      messageInput.addEventListener('keypress', (e) => {
+        if (e.key === 'Enter') {
+          sendMessage();
+        }
+      });
+      
+      clearButton.addEventListener('click', clearChat);
+
+      // Initialize
+      initializeWebSocket();
+      fetchModelInfo();
+    });
+  </script>
+</body>
+</html>
