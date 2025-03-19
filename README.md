@@ -1,3 +1,7 @@
+## from a technical challenge (part1), to a user-friendly solution (part2) to use of agents (part3).
+
+# part1
+
 # How to Run Gemma3:1b on Android
 
 ## Introduction
