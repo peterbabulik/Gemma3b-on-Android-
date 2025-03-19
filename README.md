@@ -282,6 +282,8 @@ This project demonstrates how to create an agentic Dungeons & Dragons (D&D) simu
     ```
 # if ollama is running and gemma3:1b is loaded (([part1](#part1)):
 
+5. **Run application with:**
+
 ```bash
     node index.js
 ```
