@@ -1,6 +1,7 @@
-## from a technical challenge (part1), to a user-friendly solution ([part2](#part2)) to use of agents (part3).
+## from a technical challenge (part1), to a user-friendly solution ([part2](#part2)) to use of ai agents ([part3](#part3)).
 
 # part1
+<h2 id="part1"></h2>
 
 # How to Run Gemma3:1b on Android
 
@@ -225,6 +226,103 @@ The `server.js` file contains the core logic for the application. Here's a break
 ## Public Directory (public/)
 
 The `public` directory contains the `index.html` file, which provides the user interface for the chat application.
+
+## Contributing
+
+Feel free to contribute to this project by submitting pull requests or opening issues on GitHub.
+
+## License
+
+[MIT License](LICENSE)
+
+## Part 3
+<h2 id="part3"></h2>
+
+# Agentic D&D Simulation with Gemma 3B:1b and Ollama
+
+## Introduction
+
+This project demonstrates how to create an agentic Dungeons & Dragons (D&D) simulation using Gemma 3:1b and Ollama. It showcases a basic game loop where the Game Master (AI) and player characters (AI) interact, driven by prompts sent to the LLM. This builds upon the previous guides for running Gemma 3:1b on Android and creating a web interface to interact with the Ollama API.
+
+## Prerequisites
+
+*   You must have completed the steps in ([part1](#part1)) and ([part2](#part2))
+*   Node.js and npm must be installed within the in Termux.
+*   Ollama must be running with Gemma 3:1b downloaded.
+
+## Installation
+
+1.  **Clone the Repository:** In your Termux Ubuntu environment, run:
+
+    ```bash
+    git clone https://github.com/peterbabulik/D-D-AI-locally.git
+    ```
+
+2.  **Navigate to the Project Directory:**
+
+    ```bash
+    cd D-D-AI-locally
+    ```
+
+3.  **Initialize npm:**
+
+    ```bash
+    npm init -y
+    ```
+
+4.  **Install Dependencies:**
+
+    ```bash
+    npm install node-fetch fs
+    ```
+# if ollama is running and gemma3:1b is loaded:
+
+```bash
+    node index.js
+```
+# if not:
+
+## Running the Simulation
+
+1.  **Start Ollama:** Ensure Ollama is running in a separate Termux terminal window:
+
+    ```bash
+    proot-distro login ubuntu 
+    ollama serve
+    ```
+
+2.  **Run Gemma 3:1b:** In another Termux terminal window, start Gemma 3:1b:
+
+    ```bash
+    proot-distro login ubuntu 
+    ollama run gemma3:1b
+    ```
+
+3.  **Start the Simulation:** In a third Termux terminal window, run:
+
+    ```bash
+    cd D-D-AI-locally
+    node index.js
+    ```
+
+    The simulation will begin, and the Game Master and player characters will take turns interacting.
+
+## Code Explanation
+
+*   **`index.js`:** This is the main file that orchestrates the D&D simulation.
+    *   **Database Operations:** Functions `loadDatabase` and `saveToDatabase` handle loading and saving the game state to a JSON file (`dnd_campaign.json`).
+    *   **Ollama Communication:** The `askOllama` function sends prompts to the Ollama API and retrieves responses.
+    *   **Context Generation:** `generateGameMasterContext` and `generatePlayerContext` create prompts for the Game Master and player characters, respectively, based on the current game state and character details.
+    *   **Game Loop:** The `runGame` function implements the main game loop, where the Game Master and players take turns, and the game state is updated based on their actions.
+    *   **Campaign Analysis:** `analyzeCharacter` and `analyzeCampaign` functions provide insights into character actions and the overall campaign state.
+*   **`characters.js`:** This file defines the characters in the game, including their roles, races, classes, abilities, and personalities.
+
+## Key Concepts
+
+*   **Agentic Simulation:** The simulation is driven by LLM-powered agents (the Game Master and player characters) who respond to prompts based on their roles and the current game state.
+*   **Contextual Prompts:** The prompts sent to the LLM are carefully crafted to provide the necessary context for the agents to make informed decisions.
+*   **Game State Management:** The `dnd_campaign.json` file stores the game state, including the location, quest, inventory, and character health.
+*   **Iterative Gameplay:** The game loop allows for iterative gameplay, where the actions of the agents influence the game state and subsequent prompts.
 
 ## Contributing
 
