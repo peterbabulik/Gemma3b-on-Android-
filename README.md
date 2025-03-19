@@ -238,7 +238,7 @@ Feel free to contribute to this project by submitting pull requests or opening i
 ## Part 3
 <h2 id="part3"></h2>
 
-# Agentic D&D Simulation with Gemma 3B:1b and Ollama
+# Agentic D&D Simulation with Gemma3:1b and Ollama
 
 ## Introduction
 
