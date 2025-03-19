@@ -146,11 +146,10 @@ This application provides a web interface for interacting with Gemma3:1b running
     npm install
     ```
 # if you have 'ollama run' and ' ollama serve gemma3:1b' running in 'proot-distro login ubuntu ' then:
-   
-    ```bash
-    npm start 
-    ```
-    
+ 
+```bash
+    npm start
+```
 and go to: `http://localhost:3000` if not:
 
 ## Running the Application
