@@ -248,6 +248,11 @@ This project demonstrates how to create an agentic Dungeons & Dragons (D&D) simu
 
 *   You must have completed the steps in ([part1](#part1)) and ([part2](#part2))
 *   Node.js and npm must be installed within the in Termux.
+
+    ```bash
+    apt install nodejs 
+    ```
+
 *   Ollama must be running with Gemma 3:1b downloaded.
 
 ## Installation
